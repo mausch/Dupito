@@ -71,8 +71,10 @@ let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> u
     filesToInsert |> PSeq.iter (indexFile fileHashSave)
     0
 
-let cleanup () =
-    failwith "not implemented"
+let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
+    fileHashEnumerate () 
+    |> Seq.filter (fun f -> File.Exists f.FilePath)
+    |> Seq.iter delete
     0
 
 let printList () =
@@ -83,7 +85,7 @@ let rehash () =
     failwith "not implemented"
     0
 
-let delete () =
+let deleteInteractively () =
     failwith "not implemented"
     0
 
@@ -100,6 +102,9 @@ let findAll () =
 let save f =
     ActiveRecordMediator<FileHash>.Create f
 
+let delete f =
+    ActiveRecordMediator<FileHash>.Delete f
+
 let arrayAsSeq<'a> (f : _ -> 'a[]) = 
     f >> (fun r -> r :> seq<'a>)
 
@@ -110,9 +115,9 @@ let main args =
         then help()
         else match args.[0] with
              | "a" -> add (arrayAsSeq findAll) save
-             | "c" -> cleanup ()
+             | "c" -> cleanup (arrayAsSeq findAll) delete
              | "l" -> printList ()
              | "r" -> rehash ()
-             | "d" -> delete ()
+             | "d" -> deleteInteractively ()
              | "dd" -> deleteWithoutAsking ()
              | _ -> help ()
