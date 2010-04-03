@@ -62,14 +62,18 @@ let help () =
 let hashFunction = new SHA512Managed()
 
 let indexFile (save : FileHash -> unit) f = 
+    printfn "Indexing file %A" f
     use fs = new FileStream(f, FileMode.Open)
     let hash = hashFunction.ComputeHash fs |> Convert.ToBase64String
     FileHash(Hash = hash) |> save
 
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
     let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
+    printfn "allFiles count %A" (Seq.length allFiles)
     let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.cache
+    printfn "filesInDb count %A" (Seq.length filesInDb)
     let filesToInsert = allFiles |> Seq.except filesInDb
+    printfn "filesToInsert count %A" (Seq.length filesToInsert)
     filesToInsert |> PSeq.iter (indexFile fileHashSave)
     0
 
