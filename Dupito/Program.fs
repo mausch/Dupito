@@ -5,6 +5,7 @@ open System
 open System.Configuration
 open System.Data.SqlServerCe
 open System.IO
+open System.Security.Cryptography
 open Castle.ActiveRecord
 open Castle.ActiveRecord.Framework
 open Castle.ActiveRecord.Framework.Config
@@ -13,6 +14,7 @@ open NHibernate.Connection
 open NHibernate.Dialect
 open NHibernate.Driver
 open NHibernate.ByteCode.Castle
+open Microsoft.FSharp.Collections
 
 let setupAR () = 
     let dsfLocation () =
@@ -55,8 +57,18 @@ let help () =
     printfn "dd: deletes duplicate files automatically"
     0
 
-let add () =
-    failwith "not implemented"
+let hashFunction = new SHA512Managed()
+
+let indexFile (save : FileHash -> unit) f = 
+    use fs = new FileStream(f, FileMode.Open)
+    let hash = hashFunction.ComputeHash fs |> Convert.ToBase64String
+    FileHash(Hash = hash) |> save
+
+let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
+    let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
+    let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.cache
+    let filesToInsert = allFiles |> Seq.except filesInDb
+    filesToInsert |> PSeq.iter (indexFile fileHashSave)
     0
 
 let cleanup () =
@@ -79,13 +91,25 @@ let deleteWithoutAsking () =
     failwith "not implemented"
     0
 
+let openStatelessSession () = 
+    ActiveRecordMediator.GetSessionFactoryHolder().GetSessionFactory(typeof<obj>).OpenStatelessSession ()
+
+let findAll () =
+    ActiveRecordMediator<FileHash>.FindAll()
+
+let save f =
+    ActiveRecordMediator<FileHash>.Create f
+
+let arrayAsSeq<'a> (f : _ -> 'a[]) = 
+    f >> (fun r -> r :> seq<'a>)
+
 [<EntryPoint>]
 let main args = 
     setupAR ()
     if args.Length = 0
         then help()
         else match args.[0] with
-             | "a" -> add ()
+             | "a" -> add (arrayAsSeq findAll) save
              | "c" -> cleanup ()
              | "l" -> printList ()
              | "r" -> rehash ()
