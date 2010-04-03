@@ -46,7 +46,49 @@ let setupAR () =
 
     ()
 
+let help () =
+    printfn "a: add files in this directory and subdirectories to database"
+    printfn "c: cleanup database"
+    printfn "l: list dupes"
+    printfn "r: rehash files in database"
+    printfn "d: deletes duplicate files interactively"
+    printfn "dd: deletes duplicate files automatically"
+    0
+
+let add () =
+    failwith "not implemented"
+    0
+
+let cleanup () =
+    failwith "not implemented"
+    0
+
+let printList () =
+    failwith "not implemented"
+    0
+
+let rehash () =
+    failwith "not implemented"
+    0
+
+let delete () =
+    failwith "not implemented"
+    0
+
+let deleteWithoutAsking () =
+    failwith "not implemented"
+    0
+
 [<EntryPoint>]
 let main args = 
     setupAR ()
-    0
+    if args.Length = 0
+        then help()
+        else match args.[0] with
+             | "a" -> add ()
+             | "c" -> cleanup ()
+             | "l" -> printList ()
+             | "r" -> rehash ()
+             | "d" -> delete ()
+             | "dd" -> deleteWithoutAsking ()
+             | _ -> help ()
