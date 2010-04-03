@@ -1,15 +1,16 @@
 ﻿namespace Dupito
 
+open System
 open Castle.ActiveRecord
 
 [<ActiveRecord>]
 type FileHash() = 
 
-    let mutable id : int = 0
+    let mutable id : Guid = Guid.Empty
     let mutable filePath : string = null
     let mutable hash : string = null
 
-    [<PrimaryKey>]
+    [<PrimaryKey(PrimaryKeyType.GuidComb)>]
     member this.Id
         with get () = id
         and set v = id <- v
