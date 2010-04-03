@@ -9,11 +9,13 @@ open System.Security.Cryptography
 open Castle.ActiveRecord
 open Castle.ActiveRecord.Framework
 open Castle.ActiveRecord.Framework.Config
+open Castle.ActiveRecord.Queries
 open NHibernate.Cfg
 open NHibernate.Connection
 open NHibernate.Dialect
 open NHibernate.Driver
 open NHibernate.ByteCode.Castle
+open Microsoft.FSharp.Collections
 open Microsoft.FSharp.Collections
 
 let setupAR () = 
@@ -77,6 +79,17 @@ let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
     |> Seq.iter delete
     0
 
+let compare (x: #IComparable<_>) y = 
+    x.CompareTo y 
+
+let getDupes () =
+    let q = SimpleQuery<obj[]>(typeof<FileHash>, QueryLanguage.Sql, "select {a.*}, {a2.*} from filehash a join filehash a2 on a.hash = a2.hash where a.id <> a2.id")
+    q.AddSqlReturnDefinition(typeof<FileHash>, "a")
+    q.AddSqlReturnDefinition(typeof<FileHash>, "a2")
+    q.Execute()
+    |> Seq.map (fun p -> (p.[0] :?> FileHash, p.[1] :?> FileHash))
+    |> TSet.ofSeq (fun (x,y) -> compare (fst x).Hash (fst y).Hash)
+
 let printList () =
     failwith "not implemented"
     0
@@ -107,6 +120,7 @@ let delete f =
 
 let arrayAsSeq<'a> (f : _ -> 'a[]) = 
     f >> (fun r -> r :> seq<'a>)
+
 
 [<EntryPoint>]
 let main args = 
