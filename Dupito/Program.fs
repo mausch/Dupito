@@ -47,7 +47,7 @@ let setupAR () =
             cmd.Connection <- conn
             cmd.CommandText <- sprintf "create index IX_%s on filehash(%s)" key key
             cmd.ExecuteNonQuery () |> ignore
-
+    printfn "AR initialized"
     ()
 
 let help () =
@@ -125,16 +125,13 @@ let arrayAsSeq<'a> (f : _ -> 'a[]) =
 
 [<EntryPoint>]
 let main args = 
-    printfn "Process started"
-    setupAR ()
-    printfn "AR initialized"
     if args.Length = 0
         then help()
         else match args.[0] with
-             | "a" -> add (arrayAsSeq findAll) save
-             | "c" -> cleanup (arrayAsSeq findAll) delete
-             | "l" -> printList ()
-             | "r" -> rehash ()
-             | "d" -> deleteInteractively ()
-             | "dd" -> deleteWithoutAsking ()
+             | "a" -> setupAR();add (arrayAsSeq findAll) save
+             | "c" -> setupAR();cleanup (arrayAsSeq findAll) delete
+             | "l" -> setupAR();printList ()
+             | "r" -> setupAR();rehash ()
+             | "d" -> setupAR();deleteInteractively ()
+             | "dd" -> setupAR();deleteWithoutAsking ()
              | _ -> help ()
