@@ -69,11 +69,8 @@ let indexFile (save : FileHash -> unit) f =
 
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
     let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
-    printfn "allFiles count %A" (Seq.length allFiles)
     let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.cache
-    printfn "filesInDb count %A" (Seq.length filesInDb)
     let filesToInsert = allFiles |> Seq.except filesInDb
-    printfn "filesToInsert count %A" (Seq.length filesToInsert)
     filesToInsert |> PSeq.iter (indexFile fileHashSave)
     0
 
@@ -128,7 +125,9 @@ let arrayAsSeq<'a> (f : _ -> 'a[]) =
 
 [<EntryPoint>]
 let main args = 
+    printfn "Process started"
     setupAR ()
+    printfn "AR initialized"
     if args.Length = 0
         then help()
         else match args.[0] with
