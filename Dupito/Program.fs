@@ -59,12 +59,14 @@ let help () =
     printfn "dd: deletes duplicate files automatically"
     0
 
-let hashFunction = new SHA512Managed()
-
+let hashFile f = 
+    use fs = new FileStream(f, FileMode.Open)
+    use hashFunction = new SHA512Managed()
+    hashFunction.ComputeHash fs |> Convert.ToBase64String
+    
 let indexFile (save : FileHash -> unit) f = 
     printfn "Indexing file %A" f
-    use fs = new FileStream(f, FileMode.Open)
-    let hash = hashFunction.ComputeHash fs |> Convert.ToBase64String
+    let hash = hashFile f
     FileHash(Hash = hash) |> save
 
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
