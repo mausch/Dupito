@@ -66,20 +66,18 @@ let hashFile f =
 
 let hashFileAsync f : string =
     let bufferSize = 32768
-    let a = async {
-        use fs = new FileStream(f, FileMode.Open)
-        use hashFunction = new SHA512Managed()
+    use fs = new FileStream(f, FileMode.Open)
+    use hashFunction = new SHA512Managed()
+    let rec hashBlock () = async {
         let! buffer = fs.AsyncRead bufferSize
-
-        while buffer.Length = bufferSize do
-            hashFunction.TransformBlock(buffer, 0, buffer.Length, buffer, 0) |> ignore
-            let! buffer = fs.AsyncRead bufferSize
-            ()
-
-        hashFunction.TransformFinalBlock(buffer, 0, buffer.Length) |> ignore
-        return hashFunction.Hash |> Convert.ToBase64String
+        if buffer.Length < bufferSize
+            then hashFunction.TransformFinalBlock(buffer, 0, buffer.Length) |> ignore
+            else 
+                hashFunction.TransformBlock(buffer, 0, buffer.Length, buffer, 0) |> ignore
+                return! hashBlock()
     }
-    Async.RunSynchronously a
+    hashBlock() |> Async.RunSynchronously
+    hashFunction.Hash |> Convert.ToBase64String
     
 let indexFile (save : FileHash -> unit) f = 
     printfn "Indexing file %A" f
