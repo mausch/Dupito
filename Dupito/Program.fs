@@ -86,7 +86,7 @@ let hashFileAsync f =
 let indexFile (save : FileHash -> unit) f = 
     printfn "Indexing file %A" f
     let hash = hashFile f
-    FileHash(Hash = hash) |> save
+    FileHash(Hash = hash, FilePath = f) |> save
 
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
     let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
