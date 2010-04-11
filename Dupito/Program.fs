@@ -104,16 +104,25 @@ let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
 let compare (x: #IComparable<_>) y = 
     x.CompareTo y 
 
+let comparePairs (x1,y1) (x2,y2) = 
+    (x1 = x2 && y1 = y2) || (x1 = y2 && y1 = x2)
+
+let applyToPair f (x,y) =
+    (f x, f y)
+
 let getDupes () =
+    let getHash (h: FileHash) = h.Hash
+    let getHashes = applyToPair getHash
     let q = SimpleQuery<obj[]>(typeof<FileHash>, QueryLanguage.Sql, "select {a.*}, {a2.*} from filehash a join filehash a2 on a.hash = a2.hash where a.id <> a2.id")
     q.AddSqlReturnDefinition(typeof<FileHash>, "a")
     q.AddSqlReturnDefinition(typeof<FileHash>, "a2")
     q.Execute()
     |> Seq.map (fun p -> (p.[0] :?> FileHash, p.[1] :?> FileHash))
-    |> TSet.ofSeq (fun (x,y) -> compare (fst x).Hash (fst y).Hash)
+    |> TSet.ofSeq (fun (x,y) -> if comparePairs (getHashes x) (getHashes y) then 0 else 1)
 
 let printList () =
-    failwith "not implemented"
+    getDupes()
+    |> Seq.iter (fun (f1,f2) -> printfn "%A %A" f1.FilePath f2.FilePath)
     0
 
 let rehash () =
