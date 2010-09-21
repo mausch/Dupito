@@ -65,24 +65,24 @@ let hashFile f =
     hashFunction.ComputeHash fs |> Convert.ToBase64String
 
 let hashAsync bufferSize hashFunction (stream: Stream) =
-    let buffer = Array.zeroCreate<byte> bufferSize
     let rec hashBlock currentBlock count (s: Stream) (hash: HashAlgorithm) = async {
+        let buffer = Array.zeroCreate<byte> bufferSize
         let! readCount = s.AsyncRead buffer
         if readCount = 0 then
-            printfn "%s" (System.Text.Encoding.UTF8.GetString(currentBlock))
             hash.TransformFinalBlock(currentBlock, 0, count) |> ignore
         else 
             hash.TransformBlock(currentBlock, 0, count, currentBlock, 0) |> ignore
             return! hashBlock buffer readCount s hash
     }
     async {
+        let buffer = Array.zeroCreate<byte> bufferSize
         let! readCount = stream.AsyncRead buffer
         do! hashBlock buffer readCount stream hashFunction
         return hashFunction.Hash |> Convert.ToBase64String
     }
 
 let hashFileAsync f =    
-    let bufferSize = 1000
+    let bufferSize = 32768
     async {
         use! fs = File.AsyncOpenRead f
         use hashFunction = new SHA512Managed()
