@@ -36,5 +36,5 @@ let exceptTest() =
 [<Test>]
 let fileHashing() = 
     let h1 = Program.hashFile "Castle.ActiveRecord.xml"
-    let h2 = Program.hashFileAsync "Castle.ActiveRecord.xml"
+    let h2 = Program.hashFileAsync "Castle.ActiveRecord.xml" |> Async.RunSynchronously
     Assert.AreEqual(h1, h2)

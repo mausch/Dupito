@@ -64,23 +64,30 @@ let hashFile f =
     use hashFunction = new SHA512Managed()
     hashFunction.ComputeHash fs |> Convert.ToBase64String
 
-let hashFileAsync f =
-    let bufferSize = 32768
+let hashAsync bufferSize hashFunction (stream: Stream) =
     let buffer = Array.zeroCreate<byte> bufferSize
     let rec hashBlock currentBlock count (s: Stream) (hash: HashAlgorithm) = async {
         let! readCount = s.AsyncRead buffer
-        if readCount = 0 then 
+        if readCount = 0 then
+            printfn "%s" (System.Text.Encoding.UTF8.GetString(currentBlock))
             hash.TransformFinalBlock(currentBlock, 0, count) |> ignore
         else 
             hash.TransformBlock(currentBlock, 0, count, currentBlock, 0) |> ignore
             return! hashBlock buffer readCount s hash
     }
     async {
-        use fs = new FileStream(f, FileMode.Open)
-        use hashFunction = new SHA512Managed()
-        let! readCount = fs.AsyncRead buffer
-        do! hashBlock buffer readCount fs hashFunction
+        let! readCount = stream.AsyncRead buffer
+        do! hashBlock buffer readCount stream hashFunction
         return hashFunction.Hash |> Convert.ToBase64String
+    }
+
+let hashFileAsync f =    
+    let bufferSize = 1000
+    async {
+        use! fs = File.AsyncOpenRead f
+        use hashFunction = new SHA512Managed()
+        hashFunction.Initialize()
+        return! hashAsync bufferSize hashFunction fs
     }
     
 let indexFile (save : FileHash -> unit) f = 
