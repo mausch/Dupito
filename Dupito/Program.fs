@@ -17,17 +17,21 @@ let dsfLocation () =
 let dbFilename = Path.Combine (dsfLocation(), "dupito.dsf")
 let connectionString = sprintf "Data Source=%A;" dbFilename
 
+let createConn() = 
+    let conn = new SqlCeConnection(connectionString)
+    conn.Open()
+    conn :> IDbConnection
+
+let cmgr = Sql.withNewConnection createConn
+
 let createDB() =
+    let exec sql = Sql.execNonQuery cmgr sql [] |> ignore
     use engine = new SqlCeEngine(connectionString)
     engine.CreateDatabase ()
-    use conn = new SqlCeConnection(connectionString)
-    conn.Open()
+    exec "create table filehash (filepath varchar(1000), hash varchar(16))"
     for key in ["filepath"; "hash"] do
-        use cmd = new SqlCeCommand()
-        cmd.Connection <- conn
-        cmd.CommandText <- sprintf "create index IX_%s on filehash(%s)" key key
-        cmd.ExecuteNonQuery () |> ignore
-
+        let sql = sprintf "create index IX_%s on filehash(%s)" key key
+        exec sql
 
 let setupDB () = 
     if not (File.Exists dbFilename) then
@@ -88,7 +92,7 @@ let indexFile (save : FileHash -> unit) f =
     printfn "Indexing file %A" f
     try
         let hash = hashFile f
-        {Hash = hash; FilePath = f} |> save
+        save {Hash = hash; FilePath = f}
     with e -> ()
 
 let indexFileAsync (save: FileHash -> unit) f =
@@ -96,7 +100,7 @@ let indexFileAsync (save: FileHash -> unit) f =
         printfn "Indexing file %A" f
         try
             let! hash = hashFileAsync f
-            {Hash = hash; FilePath = f} |> save
+            save {Hash = hash; FilePath = f}
         with e -> ()
     }
 
@@ -116,13 +120,6 @@ let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
     |> Seq.filter (fun f -> File.Exists f.FilePath)
     |> Seq.iter delete
     0
-
-let createConn() = 
-    let conn = new SqlCeConnection(connectionString)
-    conn.Open()
-    conn :> IDbConnection
-
-let cmgr = Sql.withNewConnection createConn
 
 let asFileHash = Sql.asRecord<FileHash>
 
