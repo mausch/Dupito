@@ -3,22 +3,23 @@
 open System
 open System.Configuration
 open System.Data
-open System.Data.SqlServerCe
 open System.IO
 open System.Security.Cryptography
+open FirebirdSql.Data.FirebirdClient
 open Microsoft.FSharp.Collections
 
-let dsfLocation () =
-    let dsfc = ConfigurationManager.AppSettings.["DsfLocation"]
-    if dsfc <> null 
-        then dsfc
+let dbLocation () =
+    let dbfile = ConfigurationManager.AppSettings.["DbLocation"]
+    if dbfile <> null 
+        then dbfile
         else Path.GetDirectoryName AppDomain.CurrentDomain.BaseDirectory
 
-let dbFilename = Path.Combine (dsfLocation(), "dupito.dsf")
-let connectionString = sprintf "Data Source=%A;" dbFilename
+let dbFilename = Path.Combine (dbLocation(), "dupito.db")
+let connectionStringForFile = sprintf "Database=%s;ServerType=1;User=SYSDBA;Password=masterkey"
+let connectionString = connectionStringForFile dbFilename
 
 let createConn() = 
-    let conn = new SqlCeConnection(connectionString)
+    let conn = new FbConnection(connectionString)
     conn.Open()
     conn :> IDbConnection
 
@@ -26,8 +27,7 @@ let cmgr = Sql.withNewConnection createConn
 
 let createDB() =
     let exec sql = Sql.execNonQuery cmgr sql [] |> ignore
-    use engine = new SqlCeEngine(connectionString)
-    engine.CreateDatabase ()
+    FbConnection.CreateDatabase connectionString
     exec "create table filehash (filepath varchar(1000), hash varchar(16))"
     for key in ["filepath"; "hash"] do
         let sql = sprintf "create index IX_%s on filehash(%s)" key key

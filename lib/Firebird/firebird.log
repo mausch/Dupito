@@ -1,0 +1,16 @@
+
+BUCHU	Thu Sep 02 19:03:23 2010
+	ib_util init failed, UDFs can't be used - looks like firebird misconfigured
+	
+	c:\prg\SolrOverflow\lib\Firebird\bin/ib_util.dll library has not been found
+	c:\prg\SolrOverflow\lib\Firebird\ib_util.dll library has not been found
+	ib_util.dll library has not been found
+
+
+BUCHU	Thu Sep 02 19:10:43 2010
+	ib_util init failed, UDFs can't be used - looks like firebird misconfigured
+	
+	c:\prg\SolrOverflow\lib\Firebird\bin/ib_util.dll library has not been found
+	c:\prg\SolrOverflow\lib\Firebird\ib_util.dll library has not been found
+	ib_util.dll library has not been found
+
