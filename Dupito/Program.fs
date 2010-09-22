@@ -168,6 +168,11 @@ let save (f: FileHash) =
 let delete (f: FileHash) = 
     Sql.execNonQueryF cmgr "delete from filehash where filepath = %s" f.FilePath |> ignore
 
+let printAll() =
+    findAll()
+    |> Seq.iter (fun h -> printfn "%s\t%s" h.FilePath h.Hash)
+    0
+
 [<EntryPoint>]
 let main args = 
     if args.Length = 0
@@ -175,8 +180,9 @@ let main args =
         else match args.[0] with
              | "a" -> setupDB();add findAll save
              | "c" -> setupDB();cleanup findAll delete
-             | "l" -> setupDB();printList ()
-             | "r" -> setupDB();rehash ()
+             | "l" -> setupDB();printList()
+             | "p" -> setupDB();printAll()
+             | "r" -> setupDB();rehash()
              | "d" -> setupDB();deleteInteractively ()
              | "dd" -> setupDB();deleteWithoutAsking ()
              | _ -> help ()
