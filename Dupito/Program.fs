@@ -91,11 +91,24 @@ let indexFile (save : FileHash -> unit) f =
         {Hash = hash; FilePath = f} |> save
     with e -> ()
 
+let indexFileAsync (save: FileHash -> unit) f =
+    async {
+        printfn "Indexing file %A" f
+        try
+            let! hash = hashFileAsync f
+            {Hash = hash; FilePath = f} |> save
+        with e -> ()
+    }
+
+
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
     let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
     let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.cache
     let filesToInsert = allFiles |> Seq.except filesInDb
-    filesToInsert |> PSeq.iter (indexFile fileHashSave)
+    filesToInsert |> Seq.map (indexFileAsync fileHashSave)
+    |> Async.Parallel 
+    |> Async.RunSynchronously
+    |> ignore
     0
 
 let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
