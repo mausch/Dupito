@@ -28,7 +28,7 @@ let cmgr = Sql.withNewConnection createConn
 let createDB() =
     let exec sql = Sql.execNonQuery cmgr sql [] |> ignore
     FbConnection.CreateDatabase connectionString
-    exec "create table filehash (filepath varchar(1000), hash varchar(16))"
+    exec "create table filehash (filepath varchar(1000), hash varchar(100))"
     for key in ["filepath"; "hash"] do
         let sql = sprintf "create index IX_%s on filehash(%s)" key key
         exec sql
