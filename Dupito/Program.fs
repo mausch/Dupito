@@ -52,29 +52,40 @@ let hashFile f =
     use hashFunction = new SHA512Managed()
     hashFunction.ComputeHash fs |> Convert.ToBase64String
 
-let hashAsync bufferSize hashFunction (stream: Stream) =
-    let rec hashBlock currentBlock count (s: Stream) (hash: HashAlgorithm) = async {
+let hashAsync bufferSize (hashFunction: HashAlgorithm) (stream: Stream) progressReport =
+    let rec hashBlock currentBlock count = async {
+        progressReport stream.Position
         let buffer = Array.zeroCreate<byte> bufferSize
-        let! readCount = s.AsyncRead buffer
+        let! readCount = stream.AsyncRead buffer
         if readCount = 0 then
-            hash.TransformFinalBlock(currentBlock, 0, count) |> ignore
+            hashFunction.TransformFinalBlock(currentBlock, 0, count) |> ignore
         else 
-            hash.TransformBlock(currentBlock, 0, count, currentBlock, 0) |> ignore
-            return! hashBlock buffer readCount s hash
+            hashFunction.TransformBlock(currentBlock, 0, count, currentBlock, 0) |> ignore
+            return! hashBlock buffer readCount
     }
     async {
         let buffer = Array.zeroCreate<byte> bufferSize
         let! readCount = stream.AsyncRead buffer
-        do! hashBlock buffer readCount stream hashFunction
+        do! hashBlock buffer readCount
         return hashFunction.Hash |> Convert.ToBase64String
     }
+
+let consolelock = obj()
+let lprintfn t = 
+    let flush (a: string) = 
+        System.Console.WriteLine(a)
+        //printfn "%s" a
+        System.Console.Out.Flush()
+    lock consolelock (fun () -> Printf.kprintf flush t)
 
 let hashFileAsync f =
     let bufferSize = 32768
     async {
         use! fs = File.AsyncOpenRead f
         use hashFunction = new SHA512Managed()
-        return! hashAsync bufferSize hashFunction fs
+        let total = fs.Length
+        let report (pos: int64) = lprintfn "%s: %s" f (((double pos)/(double total)).ToString("P"))
+        return! hashAsync bufferSize hashFunction fs ignore
     }
 
 [<CustomComparison>]
@@ -97,7 +108,7 @@ let indexFile (save : FileHash -> unit) f =
 
 let indexFileAsync (save: FileHash -> unit) f =
     async {
-        printfn "Indexing file %A" f
+        lprintfn "Indexing file %A" f
         try
             let! hash = hashFileAsync f
             save {Hash = hash; FilePath = f}
