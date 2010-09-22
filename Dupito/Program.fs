@@ -112,7 +112,9 @@ let indexFileAsync (save: FileHash -> unit) f =
         try
             let! hash = hashFileAsync f
             save {Hash = hash; FilePath = f}
-        with e -> ()
+        with e -> 
+            lprintfn "Exception: %s\n%s" e.Message e.StackTrace
+            ()
     }
 
 
