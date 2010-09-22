@@ -120,7 +120,7 @@ let indexFileAsync (save: FileHash -> unit) f =
 
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
     let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
-    let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.cache
+    let filesInDb = fileHashEnumerate() |> Seq.map (fun h -> h.FilePath) |> Seq.toList
     let filesToInsert = allFiles |> Seq.except filesInDb
     filesToInsert |> Seq.map (indexFileAsync fileHashSave)
     |> Async.Parallel 
