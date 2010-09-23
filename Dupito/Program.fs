@@ -79,7 +79,7 @@ let lprintfn t =
     lock consolelock (fun () -> Printf.kprintf flush t)
 
 let hashFileAsync f =
-    let bufferSize = 32768
+    let bufferSize = 65536
     async {
         use! fs = File.AsyncOpenRead f
         use hashFunction = new SHA512Managed()
@@ -106,6 +106,7 @@ let indexFileAsync (save: FileHash -> unit) f =
         try
             let! hash = hashFileAsync f
             save {Hash = hash; FilePath = f}
+            lprintfn "Finished indexing file %A" f
         with e -> 
             lprintfn "Exception: %s\n%s" e.Message e.StackTrace
             ()
