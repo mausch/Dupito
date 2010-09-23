@@ -139,6 +139,7 @@ let applyToPair f (x,y) =
 let getHash (h: FileHash) = h.Hash
 let getFilepath (h: FileHash) = h.FilePath
 let getHashes = applyToPair getHash
+let getFiledate (h: FileHash) = (FileInfo(h.FilePath)).LastWriteTime
 
 let getDupes () =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
@@ -147,7 +148,7 @@ let getDupes () =
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
     |> Seq.groupBy (fun (x,_) -> x.Hash)
-    |> Seq.map (fun (x,y) -> x, y |> Seq.map fst |> Seq.distinctBy (fun h -> h.FilePath))
+    |> Seq.map (fun (x,y) -> x, y |> Seq.map fst |> Seq.distinctBy getFilepath |> Seq.sortBy getFiledate)
 
 let printList () =
     getDupes()
