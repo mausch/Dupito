@@ -191,14 +191,15 @@ let printAll() =
 
 [<EntryPoint>]
 let main args = 
+    setupDB()
     if args.Length = 0
         then help()
         else match args.[0] with
-             | "a" -> setupDB();add findAll save
-             | "c" -> setupDB();cleanup findAll delete
-             | "l" -> setupDB();printList()
-             | "p" -> setupDB();printAll()
-             | "r" -> setupDB();rehash()
-             | "d" -> setupDB();deleteInteractively ()
-             | "dd" -> setupDB();deleteWithoutAsking ()
+             | "a" -> add findAll save
+             | "c" -> cleanup findAll delete
+             | "l" -> printList()
+             | "p" -> printAll()
+             | "r" -> rehash()
+             | "d" -> deleteInteractively()
+             | "dd" -> deleteWithoutAsking()
              | _ -> help ()
