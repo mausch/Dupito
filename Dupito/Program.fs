@@ -148,11 +148,11 @@ let getDupes () =
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
     |> Seq.groupBy (fun (x,_) -> x.Hash)
-    |> Seq.map (fun (x,y) -> x, y |> Seq.map fst |> Seq.distinctBy getFilepath |> Seq.sortBy getFiledate)
+    |> Seq.map (fun (_,y) -> y |> Seq.map fst |> Seq.distinctBy getFilepath |> Seq.sortBy getFiledate)
 
 let printList () =
     getDupes()
-    |> Seq.iter (fun (_,f) -> printfn "dupes:\n%s\n" (System.String.Join("\n", f |> Seq.map getFilepath |> Seq.toArray)))
+    |> Seq.iter (fun f -> printfn "dupes:\n%s\n" (System.String.Join("\n", f |> Seq.map getFilepath |> Seq.toArray)))
     0
 
 let rehash () =
