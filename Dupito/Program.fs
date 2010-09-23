@@ -137,6 +137,7 @@ let applyToPair f (x,y) =
     (f x, f y)
 
 let getHash (h: FileHash) = h.Hash
+let getFilepath (h: FileHash) = h.FilePath
 let getHashes = applyToPair getHash
 
 let getDupes () =
@@ -145,10 +146,12 @@ let getDupes () =
     Sql.execReader cmgr sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
+    |> Seq.groupBy (fun (x,_) -> x.Hash)
+    |> Seq.map (fun (x,y) -> x, y |> Seq.map fst |> Seq.distinctBy (fun h -> h.FilePath))
 
 let printList () =
     getDupes()
-    |> Seq.iter (fun (f1,f2) -> printfn "%A %A" f1.FilePath f2.FilePath)
+    |> Seq.iter (fun (_,f) -> printfn "dupes:\n%s\n" (System.String.Join("\n", f |> Seq.map getFilepath |> Seq.toArray)))
     0
 
 let rehash () =
