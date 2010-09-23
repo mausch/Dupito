@@ -155,6 +155,19 @@ let printList () =
     |> Seq.iter (fun f -> printfn "dupes:\n%s\n" (System.String.Join("\n", f |> Seq.map getFilepath |> Seq.toArray)))
     0
 
+let findAll () =
+    Sql.execReader cmgr "select * from filehash" [] |> Sql.map (asFileHash "")
+
+let save (f: FileHash) =
+    Sql.execNonQuery cmgr "insert into filehash (hash, filepath) values (@h, @p)"
+        (Sql.parameters ["@h",box f.Hash;"@p",box f.FilePath]) |> ignore
+
+let deleteByPath f =
+    Sql.execNonQueryF cmgr "delete from filehash where filepath = %s" f |> ignore
+
+let delete (f: FileHash) = deleteByPath f.FilePath
+
+
 let rehash () =
     failwith "not implemented"
     0
@@ -164,18 +177,11 @@ let deleteInteractively () =
     0
 
 let deleteWithoutAsking () =
-    failwith "not implemented"
+    getDupes()
+    |> Seq.collect (fun x -> x |> Seq.skip 1)
+    |> Seq.map (fun x -> x.FilePath)
+    |> Seq.iter ([printfn "deleting %s"; File.Delete; deleteByPath] |> Seq.iterf)
     0
-
-let findAll () =
-    Sql.execReader cmgr "select * from filehash" [] |> Sql.map (asFileHash "")
-
-let save (f: FileHash) =
-    Sql.execNonQuery cmgr "insert into filehash (hash, filepath) values (@h, @p)"
-        (Sql.parameters ["@h",box f.Hash;"@p",box f.FilePath]) |> ignore
-
-let delete (f: FileHash) = 
-    Sql.execNonQueryF cmgr "delete from filehash where filepath = %s" f.FilePath |> ignore
 
 let printAll() =
     findAll()

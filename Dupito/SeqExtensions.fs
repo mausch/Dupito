@@ -2,6 +2,9 @@
 
 open System.Collections.Generic
 
+let iterf (functions: seq<'a -> unit>) = 
+    fun x -> functions |> Seq.iter (fun f -> f x)
+
 let hasElem e s = 
     s |> Seq.exists (fun i -> i = e)
 
