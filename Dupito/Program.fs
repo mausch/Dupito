@@ -88,16 +88,10 @@ let hashFileAsync f =
         return! hashAsync bufferSize hashFunction fs ignore
     }
 
-[<CustomComparison>]
-[<StructuralEquality>]
 type FileHash = {
     Hash: string
     FilePath: string
-} with
-    interface IComparable with
-        member x.CompareTo y = 
-            compare x.Hash (y :?> FileHash).Hash
-        
+}        
     
 let indexFile (save : FileHash -> unit) f = 
     printfn "Indexing file %A" f
@@ -136,12 +130,21 @@ let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
 
 let asFileHash = Sql.asRecord<FileHash>
 
+let comparePairs (x1,y1) (x2,y2) = 
+    (x1 = x2 && y1 = y2) || (x1 = y2 && y1 = x2)
+
+let applyToPair f (x,y) =
+    (f x, f y)
+
+let getHash (h: FileHash) = h.Hash
+let getHashes = applyToPair getHash
+
 let getDupes () =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
     let sql = sprintf "select %s,%s from filehash a join filehash b on a.hash = b.hash where a.filepath <> b.filepath" (fields "a") (fields "b")
     Sql.execReader cmgr sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
-    |> Set.ofSeq
+    |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
 
 let printList () =
     getDupes()
