@@ -2,15 +2,14 @@
 
 open System.Collections.Generic
 
-let iterf (functions: seq<'a -> unit>) = 
-    fun x -> functions |> Seq.iter (fun f -> f x)
+let iterf functions x = Seq.iter ((|>) x) functions
 
-let hasElem e s = 
-    s |> Seq.exists (fun i -> i = e)
+let contains e = Seq.exists ((=) e)
+
+let notContains e = (contains e) >> not
 
 let except s2 s1 = 
-    let notHasElem e = (hasElem e) >> not
-    s1 |> Seq.filter (fun i -> s2 |> notHasElem i)
+    s1 |> Seq.filter (fun i -> s2 |> notContains i)
 
 let distinctWith (pred: 'a -> 'a -> bool) (s: 'a seq) = 
     seq {

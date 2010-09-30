@@ -5,25 +5,23 @@ open System.IO
 open NUnit.Framework
 
 [<Test>]
-let hasElemTest() =
-    [1;2;3] |> Seq.hasElem 1 
+let containsTest() =
+    [1;2;3] |> Seq.contains 1 
     |> Assert.IsTrue
 
 [<Test>]
-let notHasElemTest() = 
-    [1;2;3] |> Seq.hasElem 5
+let containsFalseTest() = 
+    [1;2;3] |> Seq.contains 5
     |> Assert.IsFalse    
 
 [<Test>]
-let notHasElemTest2() =
-    let notHasElem e = (Seq.hasElem e) >> not
-    [1;2;3] |> notHasElem 5
+let notHasElemTest() =
+    [1;2;3] |> Seq.notContains 5
     |> Assert.IsTrue
 
 [<Test>]
-let notHasElemTest3() =
-    let notHasElem e = (Seq.hasElem e) >> not
-    [1;2;3] |> notHasElem 3
+let notHasElemFalseTest() =
+    [1;2;3] |> Seq.notContains 3
     |> Assert.IsFalse
 
 [<Test>]
@@ -35,7 +33,7 @@ let exceptTest() =
 
 [<Test>]
 let fileHashing() = 
-    let file = "Castle.ActiveRecord.xml"
+    let file = "FsSql.xml"
     let h1 = Program.hashFile file
     let h2 = Program.hashFileAsync file |> Async.RunSynchronously
     Assert.AreEqual(h1, h2)
