@@ -140,8 +140,8 @@ let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> u
     0
 
 let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
-    fileHashEnumerate () 
-    |> Seq.filter (fun f -> File.Exists f.FilePath)
+    fileHashEnumerate() 
+    |> Seq.filter (getFilepath >> File.Exists >> not)
     |> Seq.iter delete
     0
 
@@ -195,7 +195,7 @@ let deleteInteractively () =
 let deleteWithoutAsking () =
     getDupes()
     |> Seq.collect (Seq.skip 1)
-    |> Seq.map (fun x -> x.FilePath)
+    |> Seq.map getFilepath
     |> Seq.iter ([printfn "deleting %s"; File.Delete; deleteByPath] |> Seq.iterf)
     0
 
