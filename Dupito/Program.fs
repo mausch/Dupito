@@ -159,7 +159,10 @@ let getFiledate (h: FileHash) = (FileInfo(h.FilePath)).LastWriteTime
 /// Gets all dupes in database
 let getDupes () =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
-    let sql = sprintf "select %s,%s from filehash a join filehash b on a.hash = b.hash where a.filepath <> b.filepath" (fields "a") (fields "b")
+    let sql = sprintf "select %s,%s from filehash a \
+                       join filehash b on a.hash = b.hash \
+                       where a.filepath <> b.filepath" 
+                        (fields "a") (fields "b")
     execReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
@@ -169,15 +172,17 @@ let getDupes () =
 /// Prints all dupes in database
 let printList () =
     getDupes()
-    |> Seq.iter (fun f -> printfn "dupes:\n%s\n" (System.String.Join("\n", f |> Seq.map getFilepath |> Seq.toArray)))
+    |> Seq.map (Seq.map getFilepath >> Seq.toArray >> Seq.join "\n")
+    |> Seq.iter (printfn "dupes:\n%s\n")
     0
 
 let findAll () =
     execReader "select * from filehash" [] |> Sql.map (asFileHash "")
 
 let save (f: FileHash) =
-    execNonQuery "insert into filehash (hash, filepath) values (@h, @p)"
-        [P("@h", f.Hash); P("@p", f.FilePath)] |> ignore
+    execNonQueryf "insert into filehash (hash, filepath) values (%s, %s)"
+        f.Hash f.FilePath
+        |> ignore
 
 let deleteByPath f =
     execNonQueryf "delete from filehash where filepath = %s" f |> ignore

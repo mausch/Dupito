@@ -1,5 +1,6 @@
 ﻿module Seq
 
+open System
 open System.Collections.Generic
 
 let iterf functions x = Seq.iter ((|>) x) functions
@@ -21,3 +22,6 @@ let distinctWith (pred: 'a -> 'a -> bool) (s: 'a seq) =
             if not (dict.ContainsKey(v)) then 
                 dict.[v] <- null; 
                 yield v }
+
+let join (sep: string) (s: 'a seq) = 
+    String.Join(sep, s)
