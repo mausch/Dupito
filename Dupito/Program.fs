@@ -56,6 +56,7 @@ let help () =
 
 /// Hash a file
 let hashFile f = 
+    printfn "hashing %s" f
     use fs = new FileStream(f, FileMode.Open)
     use hashFunction = new SHA512Managed()
     hashFunction.ComputeHash fs |> Convert.ToBase64String
@@ -129,8 +130,11 @@ let indexFileAsync (save: FileHash -> unit) f =
             ()
     }
 
+let enumerateAllFiles() = 
+    Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
+
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
-    let allFiles = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
+    let allFiles = enumerateAllFiles()
     let filesInDb = fileHashEnumerate() |> Seq.map getFilepath |> Seq.toList
     let filesToInsert = allFiles |> Seq.except filesInDb
     filesToInsert 
@@ -155,6 +159,7 @@ let applyToPair f (x,y) = (f x, f y)
 
 let getHashes = applyToPair getHash
 let getFiledate (h: FileHash) = (FileInfo(h.FilePath)).LastWriteTime
+let getFilesize (f: string) = (FileInfo(f)).Length
 
 /// Gets all dupes in database
 let getDupes () =
@@ -209,6 +214,27 @@ let printAll() =
     |> Seq.iter (fun h -> printfn "%s\t%s" h.FilePath h.Hash)
     0
 
+let findDupes() =
+    let allFiles = enumerateAllFiles()
+    let filesBySize = 
+        allFiles
+        |> Seq.groupBy getFilesize
+        |> Seq.map snd
+    let filesByHash = 
+        filesBySize
+        |> Seq.map Seq.cache
+        |> Seq.cache
+        |> PSeq.filter (fun x -> Seq.length x > 1)
+        |> PSeq.map (Seq.groupBy hashFile)
+        |> PSeq.map (Seq.map snd)
+        |> PSeq.collect id
+        |> PSeq.filter (fun x -> Seq.length x > 1)
+    filesByHash
+    |> Seq.iter (fun dupes ->
+                        printfn "\nDupes:"
+                        dupes |> Seq.iter (printfn "%s"))
+    0
+
 [<EntryPoint>]
 let main args = 
     setupDB()
@@ -217,6 +243,7 @@ let main args =
         else match args.[0] with
              | "a" -> add findAll save
              | "c" -> cleanup findAll delete
+             | "f" -> findDupes()
              | "l" -> printList()
              | "p" -> printAll()
              | "r" -> rehash()
