@@ -36,7 +36,15 @@ let P = Sql.Parameter.make
 let createDB() =
     let exec sql = execNonQuery sql [] |> ignore
     FbConnection.CreateDatabase connectionString
-    exec "create table filehash (filepath varchar(1000), hash varchar(100))"
+    exec "create table filehash (id int not null primary key, filepath varchar(1000), hash varchar(100))"
+    exec "CREATE GENERATOR gen"
+    exec "CREATE TRIGGER bt FOR filehash \
+BEFORE INSERT \
+AS \
+BEGIN \
+  IF (NEW.id IS NULL) \
+    THEN NEW.id = GEN_ID(gen, 1); \
+END "
     for key in ["filepath"; "hash"] do
         exec (sprintf "create index IX_%s on filehash(%s)" key key)
 
