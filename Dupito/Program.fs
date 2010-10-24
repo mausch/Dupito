@@ -116,6 +116,7 @@ type FileHash = {
 
 let getHash (h: FileHash) = h.Hash
 let getFilepath (h: FileHash) = h.FilePath
+let getFilesize (f: string) = (FileInfo(f)).Length
     
 /// Hash a file and save it to database
 let indexFile (save : FileHash -> unit) f = 
@@ -148,7 +149,8 @@ let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> u
     let allFiles = enumerateAllFiles()
     let filesInDb = fileHashEnumerate() |> Seq.map getFilepath |> Seq.toList
     let filesToInsert = allFiles |> Seq.except filesInDb
-    filesToInsert 
+    filesToInsert
+    |> Seq.sortBy (fun x -> - getFilesize x)
     |> PSeq.iter (indexFile fileHashSave)
     0
 
@@ -168,7 +170,6 @@ let applyToPair f (x,y) = (f x, f y)
 
 let getHashes = applyToPair getHash
 let getFiledate (h: FileHash) = (FileInfo(h.FilePath)).LastWriteTime
-let getFilesize (f: string) = (FileInfo(f)).Length
 
 /// Gets all dupes in database
 let getDupes () =
