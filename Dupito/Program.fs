@@ -146,9 +146,7 @@ let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> u
     let filesInDb = fileHashEnumerate() |> Seq.map getFilepath |> Seq.toList
     let filesToInsert = allFiles |> Seq.except filesInDb
     filesToInsert 
-    |> Seq.map (indexFileAsync fileHashSave)
-    |> Async.Parallel |> Async.RunSynchronously
-    |> ignore
+    |> PSeq.iter (indexFile fileHashSave)
     0
 
 let cleanup (fileHashEnumerate : unit -> FileHash seq) delete =
