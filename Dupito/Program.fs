@@ -119,11 +119,14 @@ let getFilepath (h: FileHash) = h.FilePath
     
 /// Hash a file and save it to database
 let indexFile (save : FileHash -> unit) f = 
-    printfn "Indexing file %A" f
+    lprintfn "Indexing file %A" f
     try
         let hash = hashFile f
         save {Hash = hash; FilePath = f}
-    with e -> ()
+        lprintfn "Finished indexing file %A" f
+    with e -> 
+        lprintfn "Exception: %s\n%s" e.Message e.StackTrace
+        ()
 
 /// Hash a file and save it to database (async)
 let indexFileAsync (save: FileHash -> unit) f =
