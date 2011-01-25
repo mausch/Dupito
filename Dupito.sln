@@ -35,6 +35,7 @@ Global
 		{A5E1E31F-7FE7-4710-A311-C91459DBA483}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A5E1E31F-7FE7-4710-A311-C91459DBA483}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A5E1E31F-7FE7-4710-A311-C91459DBA483}.Release|x86.ActiveCfg = Release|Any CPU
+		{A5E1E31F-7FE7-4710-A311-C91459DBA483}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

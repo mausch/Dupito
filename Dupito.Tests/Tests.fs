@@ -3,6 +3,7 @@
 open System
 open System.IO
 open NUnit.Framework
+open Program
 
 [<Test>]
 let containsTest() =
@@ -34,6 +35,14 @@ let exceptTest() =
 [<Test>]
 let fileHashing() = 
     let file = "FsSql.xml"
-    let h1 = Program.hashFile file
-    let h2 = Program.hashFileAsync file |> Async.RunSynchronously
+    let h1 = hashFile file
+    let h2 = hashFileAsync file |> Async.RunSynchronously
     Assert.AreEqual(h1, h2)
+
+[<Test>]
+let ``print dupe filenames``() =
+    let l = 
+        [
+            {id = 0; FilePath = "a"; Hash = "a"},{id = 1; FilePath = "a"; Hash = "a"}
+        ]
+    Program.printDupeFilenames l

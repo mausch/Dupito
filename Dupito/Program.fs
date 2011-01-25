@@ -110,10 +110,12 @@ let hashFileAsync f =
     }
 
 type FileHash = {
+    id: int
     Hash: string
     FilePath: string
 }        
 
+let getId (h: FileHash) = h.id
 let getHash (h: FileHash) = h.Hash
 let getFilepath (h: FileHash) = h.FilePath
 let getFilesize (f: string) = (FileInfo(f)).Length
@@ -123,7 +125,7 @@ let indexFile (save : FileHash -> unit) f =
     lprintfn "Indexing file %A" f
     try
         let hash = hashFile f
-        save {Hash = hash; FilePath = f}
+        save {id = 0; Hash = hash; FilePath = f}
         lprintfn "Finished indexing file %A" f
     with e -> 
         lprintfn "Exception: %s\n%s" e.Message e.StackTrace
@@ -135,7 +137,7 @@ let indexFileAsync (save: FileHash -> unit) f =
         lprintfn "Indexing file %A" f
         try
             let! hash = hashFileAsync f
-            save {Hash = hash; FilePath = f}
+            save {id = 0; Hash = hash; FilePath = f}
             lprintfn "Finished indexing file %A" f
         with e -> 
             lprintfn "Exception: %s\n%s" e.Message e.StackTrace
@@ -168,7 +170,9 @@ let comparePairs (x1,y1) (x2,y2) = (x1 = x2 && y1 = y2) || (x1 = y2 && y1 = x2)
 
 let applyToPair f (x,y) = (f x, f y)
 
+let getIds = applyToPair getId
 let getHashes = applyToPair getHash
+let getFilepaths = applyToPair getFilepath
 let getFiledate (h: FileHash) = (FileInfo(h.FilePath)).LastWriteTime
 
 /// Gets all dupes in database
@@ -183,6 +187,22 @@ let getDupes () =
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
     |> Seq.groupBy (fun (x,_) -> x.Hash)
     |> Seq.map (fun (_,y) -> y |> Seq.map fst |> Seq.distinctBy getFilepath |> Seq.sortBy getFiledate)
+
+let printDupeFilenames =
+    Seq.distinctWith (fun x y -> comparePairs (getFilepaths x) (getFilepaths y))
+    >> Seq.groupBy (fun (x,_) -> x.FilePath)
+    >> Seq.iter (fun (_,f) -> f |> Seq.map fst |> Seq.nth 0 |> getFilepath |> printf "file: %s")
+
+let deleteDupeFilenames() =
+    let fields = Sql.recordFieldsAlias typeof<FileHash>
+    let sql = sprintf "select %s,%s from filehash a \
+                       join filehash b on a.filepath = b.filepath \
+                       where a.id <> b.id" 
+                        (fields "a") (fields "b")
+    execReader sql []
+    |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
+    |> printDupeFilenames
+    0
 
 /// Prints all dupes in database
 let printList () =
@@ -259,4 +279,5 @@ let main args =
              | "r" -> rehash()
              | "d" -> deleteInteractively()
              | "dd" -> deleteWithoutAsking()
+             | "z" -> deleteDupeFilenames()
              | _ -> help ()
