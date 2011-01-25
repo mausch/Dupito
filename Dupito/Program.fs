@@ -185,13 +185,13 @@ let getDupes () =
     execReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
-    |> Seq.groupBy (fun (x,_) -> x.Hash)
-    |> Seq.map (fun (_,y) -> y |> Seq.map fst |> Seq.distinctBy getFilepath |> Seq.sortBy getFiledate)
+    |> Seq.groupBy (fst >> getHash)
+    |> Seq.map (snd >> Seq.map fst >> Seq.distinctBy getFilepath >> Seq.sortBy getFiledate)
 
 let printDupeFilenames =
     Seq.distinctWith (fun x y -> comparePairs (getFilepaths x) (getFilepaths y))
-    >> Seq.groupBy (fun (x,_) -> x.FilePath)
-    >> Seq.iter (fun (_,f) -> f |> Seq.map fst |> Seq.nth 0 |> getFilepath |> printf "file: %s")
+    >> Seq.groupBy (fst >> getFilepath)
+    >> Seq.iter (snd >> Seq.map fst >> Seq.nth 0 >> getFilepath >> printf "file: %s")
 
 let deleteDupeFilenames() =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
