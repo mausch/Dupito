@@ -180,7 +180,7 @@ let getDupes () =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
     let sql = sprintf "select %s,%s from filehash a \
                        join filehash b on a.hash = b.hash \
-                       where a.filepath <> b.filepath" 
+                       where upper(a.filepath) <> upper(b.filepath)" 
                         (fields "a") (fields "b")
     execReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
@@ -191,12 +191,12 @@ let getDupes () =
 let printDupeFilenames =
     Seq.distinctWith (fun x y -> comparePairs (getFilepaths x) (getFilepaths y))
     >> Seq.groupBy (fst >> getFilepath)
-    >> Seq.iter (snd >> Seq.map fst >> Seq.nth 0 >> getFilepath >> printf "file: %s")
+    >> Seq.iter (snd >> Seq.map fst >> Seq.nth 0 >> getFilepath >> printfn "file: %s")
 
 let deleteDupeFilenames() =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
     let sql = sprintf "select %s,%s from filehash a \
-                       join filehash b on a.filepath = b.filepath \
+                       join filehash b on upper(a.filepath) = upper(b.filepath) \
                        where a.id <> b.id" 
                         (fields "a") (fields "b")
     execReader sql []
