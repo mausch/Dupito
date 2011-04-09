@@ -59,6 +59,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)..\lib\Firebird\*.* $(TargetDir)</PostBuildEvent>

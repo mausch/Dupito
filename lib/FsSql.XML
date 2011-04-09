@@ -326,6 +326,63 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FsSqlOOWrapper">
+
+</member>
+<member name="">
+
+</member>
 <member name="T:FsSqlOperators">
 
 </member>
@@ -373,15 +430,21 @@
 <member name="T:Microsoft.FSharp.Reflection.FSharpTypeModule">
 
 </member>
-<member name="M:Microsoft.FSharp.Reflection.FSharpValueModule.|OSome|_|``1(System.Object)">
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Microsoft.FSharp.Reflection.FSharpValueModule.|OSome|ONone|(System.Object)">
  <summary>
- Extracts value associated with an Option.
+ Extracts value associated with a boxed Option.
  </summary>
  <exception cref="System.ArgumentException">Argument is not an option</exception>
 </member>
 <member name="M:Microsoft.FSharp.Reflection.FSharpValueModule.|OptionType|NotOptionType|``1(``0)">
  <summary>
- OptionType if value to match is an Option, otherwise NotOptionType
+ OptionType if value to match is a boxed Option, otherwise NotOptionType
  </summary>
  <exception cref="System.ArgumentException">Argument is not an option</exception>
 </member>
@@ -420,6 +483,9 @@
  </summary>
 </member>
 <member name="T:Microsoft.FSharp.Reflection.FSharpValueModule">
+
+</member>
+<member name="">
 
 </member>
 <member name="M:Option.getOrDefault``1(Microsoft.FSharp.Core.FSharpOption{``0})">
@@ -483,11 +549,6 @@
 <member name="">
 
 </member>
-<member name="T:Sql.TxResult`1">
-<summary>
- Transaction result
-</summary>
-</member>
 <member name="">
 
 </member>
@@ -497,23 +558,17 @@
 <member name="">
 
 </member>
-<member name="">
-
-</member>
-<member name="">
-
-</member>
-<member name="T:Sql.Parameter">
+<member name="T:SqlModule.Parameter">
 <summary>
  Represents a parameter to a command
 </summary>
 </member>
-<member name="T:Sql.ConnectionManager">
+<member name="T:SqlModule.ConnectionManager">
 <summary>
  Encapsulates how to create and dispose a database connection
 </summary>
 </member>
-<member name="M:Sql.recordFieldsAlias(System.Type)">
+<member name="M:SqlModule.recordFieldsAlias(System.Type)">
 <summary>
  Gets all field names from a record type formatted with an alias.
  E.g. with a field &quot;id&quot; and alias &quot;a&quot;, returns &quot;a.id a_id&quot;
@@ -525,118 +580,152 @@
 <member name="">
 
 </member>
-<member name="M:Sql.recordValues``1(``0)">
+<member name="M:SqlModule.recordValues``1(``0)">
 <summary>
  Gets all field values from a record
 </summary>
 </member>
-<member name="M:Sql.asRecord``1">
+<member name="M:SqlModule.asRecord``1">
 <summary>
  Maps a datarecord to a record &apos;a using an optional prefix for record field names
 </summary>
 </member>
-<member name="M:Sql.recordFields(System.Type)">
+<member name="">
+
+</member>
+<member name="M:SqlModule.recordFields(System.Type)">
 <summary>
  Gets all field names from a record type
 </summary>
 </member>
-<member name="M:Sql.optionalBy``2(System.String,Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},``0)">
+<member name="M:SqlModule.optionalBy``2(System.String,Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},``0)">
  <summary>
  Converts a mapper into an optional mapper. 
  Intended to be used when mapping nullable joined tables
  </summary>
  <param name="fieldName">Field to use to check for null entity</param>
 </member>
-<member name="">
-
+<member name="M:SqlModule.asTuple4``4">
+<summary>
+ Maps the first 4 fields from a row as a tuple
+</summary>
 </member>
-<member name="">
-
+<member name="M:SqlModule.asTuple3``3">
+<summary>
+ Maps the first 3 fields from a row as a tuple
+</summary>
 </member>
-<member name="">
-
+<member name="M:SqlModule.asTriple``3">
+<summary>
+ Maps the first 3 fields from a row as a tuple
+</summary>
 </member>
-<member name="M:Sql.mapOne``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
+<member name="M:SqlModule.asTuple2``2">
+<summary>
+ Maps the first 2 fields from a row as a tuple
+</summary>
+</member>
+<member name="M:SqlModule.asPair``2">
+<summary>
+ Maps the first 2 fields from a row as a tuple
+</summary>
+</member>
+<member name="M:SqlModule.asScalar``1(System.Data.IDataRecord)">
+<summary>
+ Maps the first field from a row
+</summary>
+</member>
+<member name="M:SqlModule.asScalari``1(System.Int32,System.Data.IDataRecord)">
+<summary>
+ Maps a single field (with position i) from a row.
+</summary>
+</member>
+<member name="M:SqlModule.asDict(System.Data.IDataRecord)">
+<summary>
+ Maps a row as a dictionary of name,value
+</summary>
+</member>
+<member name="M:SqlModule.asMap(System.Data.IDataRecord)">
+<summary>
+ Maps a row as a Map of name,value
+</summary>
+</member>
+<member name="M:SqlModule.asNameValue(System.Data.IDataRecord)">
+<summary>
+ Maps a row as a sequence of name,value
+</summary>
+</member>
+<member name="M:SqlModule.mapOne``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
 <summary>
  Maps a datareader&apos;s single row. Throws if there isn&apos;t exactly one row
 </summary>
 </member>
-<member name="M:Sql.mapFirst``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
+<member name="M:SqlModule.mapFirst``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
 <summary>
  Maps a datareader&apos;s first row
 </summary>
 </member>
-<member name="M:Sql.map``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
+<member name="M:SqlModule.execReaderWith``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0})">
+<summary>
+ Executes a query and maps the result
+</summary>
+</member>
+<member name="M:SqlModule.map``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDataRecord,``0},System.Data.IDataReader)">
 <summary>
  Maps a datareader
 </summary>
 </member>
-<member name="M:Sql.asyncExecSPScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{Sql.Parameter})">
+<member name="M:SqlModule.asyncExecSPScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter})">
 <summary>
  Executes the stored procedure asynchronously, and returns the first column of the first row in the resultset returned by the query. Extra columns or rows are ignored.
 </summary>
 </member>
-<member name="M:Sql.asyncExecScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{Sql.Parameter})">
+<member name="M:SqlModule.asyncExecScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter})">
 <summary>
  Executes the query asynchronously, and returns the first column of the first row in the resultset returned by the query. Extra columns or rows are ignored.
 </summary>
 </member>
-<member name="M:Sql.execSPScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{Sql.Parameter})">
+<member name="M:SqlModule.execSPScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter})">
 <summary>
  Executes the stored procedure, and returns the first column of the first row in the resultset returned by the query. Extra columns or rows are ignored.
 </summary>
 </member>
-<member name="M:Sql.execScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{Sql.Parameter})">
+<member name="M:SqlModule.execScalar``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter})">
 <summary>
  Executes the query, and returns the first column of the first row in the resultset returned by the query. Extra columns or rows are ignored.
 </summary>
 </member>
-<member name="M:Sql.mapScalar``2(``0)">
+<member name="M:SqlModule.mapScalar``2(``0)">
 <summary>
  Maps a &lt;see cref=&quot;IDataReader&quot;/&gt; as a scalar result
 </summary>
 </member>
-<member name="M:Sql.readString``1">
+<member name="M:SqlModule.readString``1">
 <summary>
  Reads a string field from a &lt;see cref=&quot;IDataRecord&quot;/&gt;, returns None if null, otherwise Some x
 </summary>
 </member>
-<member name="M:Sql.readInt``1">
+<member name="M:SqlModule.readInt``1">
 <summary>
  Reads an integer field from a &lt;see cref=&quot;IDataRecord&quot;/&gt;, returns None if null, otherwise Some x
 </summary>
 </member>
-<member name="M:Sql.readField``2(System.String,``0)">
+<member name="M:SqlModule.readField``2(System.String,``0)">
 <summary>
  Reads a field from a &lt;see cref=&quot;IDataRecord&quot;/&gt;, returns None if null, otherwise Some x
 </summary>
 </member>
-<member name="M:Sql.isNull``1(``0)">
+<member name="M:SqlModule.isNull``1(``0)">
 <summary>
  True if the value is a DB null
 </summary>
 </member>
-<member name="M:Sql.transactional2``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0})">
-<summary>
- Wraps a function in a transaction, returns a &lt;see cref=&quot;TxResult{T}&quot;/&gt;
-</summary>
-</member>
-<member name="M:Sql.transactional``1(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
-<summary>
- Wraps a function in a transaction
-</summary>
-</member>
-<member name="M:Sql.transactionalWithIsolation``1(System.Data.IsolationLevel,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0})">
-<summary>
- Wraps a function in a transaction with the specified &lt;see cref=&quot;IsolationLevel&quot;/&gt;
-</summary>
-</member>
-<member name="M:Sql.asyncExecSPNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.asyncExecSPNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a stored procedure asynchronously and returns the number of rows affected
 </summary>
 </member>
-<member name="M:Sql.asyncExecNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.asyncExecNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a SQL statement asynchronously and returns the number of rows affected
 </summary>
@@ -644,12 +733,12 @@
 <member name="">
 
 </member>
-<member name="M:Sql.execSPNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.execSPNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a stored procedure and returns the number of rows affected
 </summary>
 </member>
-<member name="M:Sql.execNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.execNonQuery(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a SQL statement and returns the number of rows affected
 </summary>
@@ -657,27 +746,27 @@
 <member name="">
 
 </member>
-<member name="M:Sql.execNonQueryInternal``2(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbCommand,``0},System.Data.CommandType,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,``1)">
+<member name="M:SqlModule.execNonQueryInternal``2(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbCommand,``0},System.Data.CommandType,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,``1)">
 <summary>
  Executes and returns the number of rows affected
 </summary>
 </member>
-<member name="M:Sql.asyncExecSPReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.asyncExecSPReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a stored procedure asynchronously and returns a data reader
 </summary>
 </member>
-<member name="M:Sql.asyncExecReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.asyncExecReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a query asynchronously and returns a data reader
 </summary>
 </member>
-<member name="M:Sql.execSPReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.execSPReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a stored procedure and returns a data reader
 </summary>
 </member>
-<member name="M:Sql.execReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.execReader(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Executes a query and returns a data reader
 </summary>
@@ -688,7 +777,7 @@
 <member name="">
 
 </member>
-<member name="M:Sql.execReaderInternal``2(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbCommand,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},``0}},System.Data.CommandType,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,``1)">
+<member name="M:SqlModule.execReaderInternal``2(Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbCommand,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},``0}},System.Data.CommandType,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},System.String,``1)">
 <summary>
  Executes and returns a data reader
 </summary>
@@ -696,7 +785,7 @@
 <member name="">
 
 </member>
-<member name="M:Sql.parameters``1(``0)">
+<member name="M:SqlModule.parameters``1(``0)">
 <summary>
  Creates a list of parameters
 </summary>
@@ -707,22 +796,22 @@
 <member name="">
 
 </member>
-<member name="M:Sql.createCommand(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<member name="M:SqlModule.createCommand(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
 <summary>
  Creates an IDbCommand
 </summary>
 </member>
-<member name="M:Sql.addParameter``1(``0,Sql.Parameter)">
+<member name="M:SqlModule.addParameter``1(``0,SqlModule.Parameter)">
 <summary>
  Adds a parameter to a command
 </summary>
 </member>
-<member name="M:Sql.execNonQueryF``3(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.PrintfFormat{``0,``1,``2,System.Int32})">
+<member name="M:SqlModule.execNonQueryF``3(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.PrintfFormat{``0,``1,``2,System.Int32})">
 <summary>
  Executes a printf-formatted SQL statement and returns the number of rows affected
 </summary>
 </member>
-<member name="M:Sql.execReaderF``3(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.PrintfFormat{``0,``1,``2,System.Data.IDataReader})">
+<member name="M:SqlModule.execReaderF``3(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction},Microsoft.FSharp.Core.PrintfFormat{``0,``1,``2,System.Data.IDataReader})">
 <summary>
  Executes a printf-formatted query and returns a data reader
 </summary>
@@ -745,22 +834,144 @@
 <member name="">
 
 </member>
-<member name="M:Sql.withNewConnection(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection})">
+<member name="M:SqlModule.withNewConnection(Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection})">
 <summary>
  Creates a &lt;see cref=&quot;ConnectionManager&quot;/&gt; with an owned connection
 </summary>
 </member>
-<member name="M:Sql.withTransaction(System.Data.IDbTransaction)">
+<member name="M:SqlModule.withTransaction(System.Data.IDbTransaction)">
 <summary>
  Creates a &lt;see cref=&quot;ConnectionManager&quot;/&gt; with an externally-owned transaction
 </summary>
 </member>
-<member name="M:Sql.withConnection(System.Data.IDbConnection)">
+<member name="M:SqlModule.withConnection(System.Data.IDbConnection)">
 <summary>
  Creates a &lt;see cref=&quot;ConnectionManager&quot;/&gt; with an externally-owned connection
 </summary>
 </member>
-<member name="T:Sql">
+<member name="T:SqlModule">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Tx.TxResult`2.Failed">
+<summary>
+ Transaction failed due to an exception and was rolled back
+</summary>
+</member>
+<member name="T:Tx.TxResult`2.Rollback">
+<summary>
+ Transaction manually rolled back
+</summary>
+</member>
+<member name="T:Tx.TxResult`2.Commit">
+<summary>
+ Transaction committed successfully
+</summary>
+</member>
+<member name="T:Tx.TxResult`2">
+<summary>
+ Transaction result
+</summary>
+</member>
+<member name="M:Tx.rollback``2(``0,Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ Rolls back the transaction.
+ For use within a tx monad.
+</summary>
+</member>
+<member name="M:Tx.execReader``1(System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ Executes a query and returns a data reader.
+ For use within a tx monad.
+</summary>
+</member>
+<member name="M:Tx.execNonQueryi``1(System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ Executes a SQL statement.
+ For use within a tx monad.
+</summary>
+</member>
+<member name="M:Tx.execNonQuery``1(System.String,System.Collections.Generic.IEnumerable{SqlModule.Parameter},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ Executes a SQL statement and returns the number of rows affected.
+ For use within a tx monad.
+</summary>
+</member>
+<member name="M:Tx.transactional2``2(Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+ <summary>
+ Wraps a function in a transaction, returns a <see cref="TxResult"/>
+ </summary>
+</member>
+<member name="M:Tx.required``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ If there is a running transaction, the function executes within this transaction.
+ Otherwise, a new transaction is started and the function executes within this new transaction.
+</summary>
+</member>
+<member name="M:Tx.supported``2(Microsoft.FSharp.Core.FSharpFunc`2{``0,``1},``0)">
+<summary>
+ If there is a running transaction, the function executes within this transaction.
+ Otherwise, the function executes without any transaction.
+</summary>
+</member>
+<member name="M:Tx.never``4(Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{``0,``1,Microsoft.FSharp.Core.FSharpOption{``2}},``3},``0,``1,Microsoft.FSharp.Core.FSharpOption{``2})">
+<summary>
+ If there is a running transaction, throws.
+ Otherwise, the function executes without any transaction.
+</summary>
+</member>
+<member name="M:Tx.mandatory``4(Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{``0,``1,Microsoft.FSharp.Core.FSharpOption{``2}},``3},``0,``1,Microsoft.FSharp.Core.FSharpOption{``2})">
+<summary>
+ If there is a running transaction, the function executes within this transaction.
+ Otherwise, throws.
+</summary>
+</member>
+<member name="M:Tx.transactional``1(Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0})">
+<summary>
+ Wraps a function in a transaction
+</summary>
+</member>
+<member name="M:Tx.transactionalWithIsolation``1(System.Data.IsolationLevel,Microsoft.FSharp.Core.FSharpFunc`2{System.Tuple`3{Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction}},``0},Microsoft.FSharp.Core.FSharpFunc`2{Microsoft.FSharp.Core.Unit,System.Data.IDbConnection},Microsoft.FSharp.Core.FSharpFunc`2{System.Data.IDbConnection,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Data.IDbTransaction})">
+<summary>
+ Wraps a function in a transaction with the specified &lt;see cref=&quot;IsolationLevel&quot;/&gt;
+</summary>
+</member>
+<member name="T:Tx">
 
 </member>
 </members>
