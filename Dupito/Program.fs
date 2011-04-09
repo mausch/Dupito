@@ -27,14 +27,11 @@ let createConn() =
 let cmgr = Sql.withNewConnection createConn
 
 // partial application of common functions
-let execReader x = Sql.execReader cmgr x
-let execReaderf x = Sql.execReaderF cmgr x
-let execNonQuery x = Sql.execNonQuery cmgr x
-let execNonQueryf x = Sql.execNonQueryF cmgr x
+let db = SqlWrapper cmgr
 let P = Sql.Parameter.make
 
 let createDB() =
-    let exec sql = execNonQuery sql [] |> ignore
+    let exec sql = db.ExecNonQuery sql [] |> ignore
     FbConnection.CreateDatabase connectionString
     exec "create table filehash (id int not null primary key, filepath varchar(1000), hash varchar(100))"
     exec "CREATE GENERATOR gen"
@@ -182,7 +179,7 @@ let getDupes () =
                        join filehash b on a.hash = b.hash \
                        where upper(a.filepath) <> upper(b.filepath)" 
                         (fields "a") (fields "b")
-    execReader sql []
+    db.ExecReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> Seq.distinctWith (fun x y -> comparePairs (getHashes x) (getHashes y))
     |> Seq.groupBy (fst >> getHash)
@@ -199,7 +196,7 @@ let deleteDupeFilenames() =
                        join filehash b on upper(a.filepath) = upper(b.filepath) \
                        where a.id <> b.id" 
                         (fields "a") (fields "b")
-    execReader sql []
+    db.ExecReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
     |> printDupeFilenames
     0
@@ -212,15 +209,15 @@ let printList () =
     0
 
 let findAll () =
-    execReader "select * from filehash" [] |> Sql.map (asFileHash "")
+    db.ExecReader "select * from filehash" [] |> Sql.map (asFileHash "")
 
 let save (f: FileHash) =
-    execNonQueryf "insert into filehash (hash, filepath) values (%s, %s)"
+    db.ExecNonQueryF "insert into filehash (hash, filepath) values (%s, %s)"
         f.Hash f.FilePath
         |> ignore
 
 let deleteByPath f =
-    execNonQueryf "delete from filehash where filepath = %s" f |> ignore
+    db.ExecNonQueryF "delete from filehash where filepath = %s" f |> ignore
 
 let delete (f: FileHash) = deleteByPath f.FilePath
 
