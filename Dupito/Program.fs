@@ -144,12 +144,14 @@ let indexFileAsync (save: FileHash -> unit) f =
 let enumerateAllFiles() = 
     Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.*", SearchOption.AllDirectories)
 
+let toUpper (s: string) = s.ToUpperInvariant()
+
 let add (fileHashEnumerate : unit -> FileHash seq) (fileHashSave : FileHash -> unit) =
-    let allFiles = enumerateAllFiles()
-    let filesInDb = fileHashEnumerate() |> Seq.map getFilepath |> Seq.toList
+    let allFiles = enumerateAllFiles() |> Seq.map toUpper
+    let filesInDb = fileHashEnumerate() |> Seq.map (getFilepath >> toUpper) |> Seq.toList
     let filesToInsert = allFiles |> Seq.except filesInDb
     filesToInsert
-    |> Seq.sortBy (fun x -> - getFilesize x)
+    //|> Seq.sortBy (fun x -> - getFilesize x)
     |> PSeq.iter (indexFile fileHashSave)
     0
 
@@ -177,7 +179,7 @@ let getDupes () =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
     let sql = sprintf "select %s,%s from filehash a \
                        join filehash b on a.hash = b.hash \
-                       where upper(a.filepath) <> upper(b.filepath)" 
+                       where a.filepath <> b.filepath" 
                         (fields "a") (fields "b")
     db.ExecReader sql []
     |> Sql.map (fun r -> asFileHash "a" r, asFileHash "b" r)
@@ -193,7 +195,7 @@ let printDupeFilenames =
 let deleteDupeFilenames() =
     let fields = Sql.recordFieldsAlias typeof<FileHash>
     let sql = sprintf "select %s,%s from filehash a \
-                       join filehash b on upper(a.filepath) = upper(b.filepath) \
+                       join filehash b on a.filepath = b.filepath \
                        where a.id <> b.id" 
                         (fields "a") (fields "b")
     db.ExecReader sql []
