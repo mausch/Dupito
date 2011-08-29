@@ -50,9 +50,6 @@
     </Reference>
     <Reference Include="FSharp.PowerPack, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809" />
     <Reference Include="FSharp.PowerPack.Parallel.Seq, Version=1.9.9.9, Culture=neutral, PublicKeyToken=a19089b1c74d0809" />
-    <Reference Include="FsSql">
-      <HintPath>..\lib\FsSql.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core" />
     <Reference Include="System" />
@@ -60,6 +57,13 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FsSql\FsSql\FsSql.fsproj">
+      <Name>FsSql</Name>
+      <Project>{f2570da4-5df1-4d5e-9534-b3f55606b3b5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(ProjectDir)..\lib\Firebird\*.* $(TargetDir)</PostBuildEvent>

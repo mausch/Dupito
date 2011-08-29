@@ -1,0 +1,3 @@
+[submodule "FsSql"]
+	path = FsSql
+	url = git://github.com/mausch/FsSql.git
