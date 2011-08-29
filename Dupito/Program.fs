@@ -206,7 +206,7 @@ let deleteDupeFilenames() =
 /// Prints all dupes in database
 let printList () =
     getDupes()
-    |> Seq.map (Seq.map getFilepath >> Seq.toArray >> Seq.join "\n")
+    |> Seq.map (Seq.map getFilepath >> Seq.toArray >> String.concat "\n")
     |> Seq.iter (printfn "dupes:\n%s\n")
     0
 
